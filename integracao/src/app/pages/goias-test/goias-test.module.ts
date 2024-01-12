@@ -7,6 +7,7 @@ import { GoiasTestComponent } from './goias-test.component';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
+import { AutoCompleteModule } from "primeng/autocomplete";
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { MessagesModule } from 'primeng/messages';
@@ -27,6 +28,7 @@ import { ToastModule } from 'primeng/toast';
     FormsModule,
     InputTextModule,
     DropdownModule,
+    AutoCompleteModule,
     InputTextareaModule,
     ButtonModule,
 		MessagesModule,

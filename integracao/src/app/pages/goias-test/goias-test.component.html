@@ -12,12 +12,12 @@
           <div class="col">
             <div class="form-group flex flex-column p-fluid gap-2">
               <label for="paciente" class="text-lg font-bold">Paciente</label>
-              <p-dropdown [options]="pacientes" [(ngModel)]="selectedPacienteDrop" placeholder="Selecione um paciente"></p-dropdown>
+              <p-dropdown [options]="pacientes" [(ngModel)]="selectedPacienteDrop" placeholder="Selecione um paciente" (onChange)="selecionarPaciente($event)"></p-dropdown>
               <!-- <p-dropdown [options]="medicamentos" [(ngModel)]="selectedMedicamentoDrop" placeholder="Selecione um medicamento"></p-dropdown> -->
             </div>
           </div>
           <div class="col col-fixed flex align-items-end">
-            <button pButton pRipple type="button" label="Cadastrar novo paciente"></button>
+            <button #addPacienteSelection pButton pRipple type="button" class="addPacienteSelection" label="Cadastrar novo paciente"></button>
           </div>
         </div>
       </section>
@@ -30,16 +30,18 @@
       <section class="section p-3">
         <div class="flex justify-content-between align-items-center">
           <label for="localAtendimento" class="text-lg font-bold">Medicamentos</label>
-          <button pButton pRipple type="button" icon="pi pi-plus" label="Adicionar medicamento" class="p-button-text p-button-rounded" (click)="toggleAddMedicamentoBox(true)"></button>
+          <button #addMedicamentoButtom pButton pRipple type="button" icon="pi pi-plus" label="Adicionar medicamento" class="addMedicamentoButtom p-button-text p-button-rounded" (click)="toggleAddMedicamentoBox(true)"></button>
+				<!-- <button pButton pRipple type="button" label="Warning" class="p-button-warning p-button-text"></button> -->
         </div>
         
         <div *ngIf="addMedicamento" class="add-medicamentos mt-2 pb-3 bg-gray-100 border-1 border-500 border-round-lg">
           <h5 class="m-3">Adicionar Medicamento</h5>
           <div class="row grid px-3">
             <div class="col col-6">
-              <div class="form-group flex flex-column gap-2">
+              <div class="form-group flex flex-column gap-2 p-fluid">
                 <label for="medicamentoNome">Nome do medicamento/fórmula/substância prescrito(a) (DCB) <span class="text-lg font-bold text-red-500">*</span></label>
-                <input type="text" pInputText class="form-control" id="medicamentoNome" placeholder="" [(ngModel)]="medicamento.nome" name="medicamentoNome">
+                <!-- <input type="hidden" pInputText class="form-control" id="medicamentoNome" placeholder="" [(ngModel)]="medicamento.nome" name="medicamentoNome"> -->
+			          <p-autoComplete [(ngModel)]="selectedPacienteDrop" [suggestions]="filteredMedicamentos" name="medicamentoNome" (completeMethod)="filterMedicamento($event)" field="label" [ngModelOptions]="{standalone: true}"></p-autoComplete>
                 <!-- <p-dropdown [options]="medicamentos" [(ngModel)]="selectedMedicamentoDrop" id="medicamentoNome" placeholder="Selecione um medicamento"></p-dropdown> -->
               </div>
             </div>
@@ -65,7 +67,7 @@
             </div>
           </div>
           <div class="row flex justify-content-end gap-3 pt-3 px-3">
-            <button pButton pRipple type="button" label="Adicionar" class="p-button-outlined p-button-rounded" (click)="salvarMedicamento(medicamento)"></button>
+            <button pButton pRipple type="button" label="Adicionar" class="p-button-outlined p-button-rounded" (click)="adicionarMedicamento(medicamento)"></button>
             <button pButton pRipple type="button" label="Cancelar" class="p-button-outlined p-button-rounded" (click)="toggleAddMedicamentoBox(false)"></button>
           </div>
         </div>
@@ -99,11 +101,11 @@
           <div class="col">
             <div class="form-group flex flex-column p-fluid gap-2">
               <label for="localAtendimento" class="text-lg font-bold">Local de Atendimento</label>
-              <p-dropdown [options]="locaisAtendimento" [(ngModel)]="selectedLocaisAtendimentoDrop" placeholder="Selecione um local de atendimento"></p-dropdown>
+              <p-dropdown [options]="locaisAtendimento" [(ngModel)]="selectedLocaisAtendimentoDrop" placeholder="Selecione um local de atendimento" (onChange)="selecionarLocalAtendimento($event)"></p-dropdown>
             </div>
           </div>
           <div class="col col-fixed flex align-items-end">
-            <button pButton pRipple type="button" label="Cadastrar novo local de atendimento"></button>
+            <button #addLocalAtendimentoSelection pButton pRipple type="button" class="addLocalAtendimentoSelection" label="Cadastrar novo local de atendimento"></button>
           </div>
         </div>
       </section>
@@ -127,7 +129,7 @@
     <div class="col">
       <div class="form-group flex flex-column gap-2">
         <label for="localAtendimento" class="text-base">Informe o Token de Acesso</label>
-        <input type="text" pInputText class="form-control {{invalidToken ? 'ng-dirty ng-invalid' : ''}}" placeholder="" [(ngModel)]="accessToken" name="accessToken">
+        <input #accessTokenField type="text" pInputText class="form-control {{invalidToken ? 'ng-dirty ng-invalid' : ''}}" placeholder="" [(ngModel)]="accessToken" name="accessToken">
       </div>
     </div>
   </div>

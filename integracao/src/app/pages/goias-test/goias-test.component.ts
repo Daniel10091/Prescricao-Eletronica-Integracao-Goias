@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { Message, MessageService, SelectItem } from 'primeng/api';
 
@@ -23,13 +23,20 @@ import { IntegrationMessagesService } from 'src/app/services/integration-message
 export class GoiasTestComponent implements OnInit {
 
   // Utils
-  addMedicamento = false;
+  addMedicamento = true;
   msgs: Message[] = [];
-  accessTokenModalDisplay: boolean = true;
+  accessTokenModalDisplay: boolean = false;
+
+  // UI
+  @ViewChild('addPacienteSelection') addPacienteSelection?: ElementRef;
+  @ViewChild('addMedicamentoButtom') addMedicamentoButtom?: ElementRef;
+  @ViewChild('addLocalAtendimentoSelection') addLocalAtendimentoSelection?: ElementRef;
+  @ViewChild('accessTokenField') accessTokenField?: ElementRef;
 
   // Paciente UI
   pacientes: SelectItem[] = [];
-  selectedPacienteDrop: SelectItem = { value: '' };
+  filteredMedicamentos: SelectItem[] = [];
+  selectedPacienteDrop: SelectItem[] = [];
 
   // Medicamento UI
   medicamentos: SelectItem[] = [];
@@ -102,18 +109,45 @@ export class GoiasTestComponent implements OnInit {
     });
 
     // Popula a lista de medicamentos a ser carregados.
-    this.medicamentos = [
-      { label: 'Amoxcilina', value: 'Amoxcilina' },
-      { label: 'Dipirona', value: 'Dipirona' },
-      { label: 'Paracetamol', value: 'Paracetamol' },
-      { label: 'Ibuprofeno', value: 'Ibuprofeno' },
-      { label: 'Dorflex', value: 'Dorflex' }
-    ];
+    // this.medicamentos = [
+    //   { label: 'Amoxcilina', value: 'Amoxcilina' },
+    //   { label: 'Dipirona', value: 'Dipirona' },
+    //   { label: 'Paracetamol', value: 'Paracetamol' },
+    //   { label: 'Ibuprofeno', value: 'Ibuprofeno' },
+    //   { label: 'Dorflex', value: 'Dorflex' }
+    // ];
+
+    [
+      {
+        "id": 662,
+        "nome": "amoxilina",
+        "medicoId": 129
+      },
+      {
+        "id": 590,
+        "nome": "DIPIRONA SODICA",
+        "medicoId": 129
+      },
+      {
+        "id": 461,
+        "nome": "DIPRIVAN",
+        "medicoId": 129
+      },
+      {
+        "id": 587,
+        "nome": "rivotril",
+        "medicoId": 129
+      },
+    ].forEach((medicamento: any) => {
+      let medicamentoNome = medicamento.nome;
+      this.medicamentos.push({ label: medicamentoNome, value: medicamento });
+    });
 
     // Inicializa a lista de medicamentos selecionados.
     this.medicamentosSelecionados = [
       // new Medicamento('1', false, 'Amoxcilina', '2mg', 2, 'Tomar diariamente.')
     ];
+    
   }
 
   // ========== [ Access token modal ] ==========
@@ -147,7 +181,30 @@ export class GoiasTestComponent implements OnInit {
    * @returns void
    */
   public toggleAddMedicamentoBox(value: boolean): void {
+    if (this.addMedicamentoButtom?.nativeElement.classList.contains('warning-alert'))
+      this.addMedicamentoButtom?.nativeElement.classList.remove('warning-alert');
+    
     this.addMedicamento = value;
+  }
+
+  /**
+   * Filtra medicamentos.
+   * 
+   * @param event 
+   * @returns void 
+   */
+  public filterMedicamento(event: any) {
+    const filtered: any[] = [];
+    const query = event.query;
+    for (let i = 0; i < this.medicamentos.length; i++) {
+      const medicamento = this.medicamentos[i];
+      if (medicamento.label!.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(medicamento);
+      }
+    }
+
+    this.filteredMedicamentos = filtered;
+    this.medicamento = this.filteredMedicamentos[0].value;
   }
 
   /**
@@ -172,28 +229,32 @@ export class GoiasTestComponent implements OnInit {
   }
 
   /**
-   * Salva um medicamento. Se o medicamento já existir na lista de medicamentos selecionados, atualiza-o. Caso contrário, adiciona-o.
+   * Adiciona um medicamento. Se o medicamento já existir na lista de medicamentos selecionados, atualiza-o. Caso contrário, adiciona-o.
    * 
    * @param medicamento 
    * @returns void 
    */
-  public salvarMedicamento(medicamento: Medicamento): void {
-    if (this.medicamentosSelecionados.filter((medicamentoSelecionado) => {
-      return medicamentoSelecionado.idMedicamento === medicamento.idMedicamento;
-    }).length === 0) {
-      if (this.valueIsNotNull(medicamento.nome) && this.valueIsNotNull(medicamento.quantidade)) {
-        this.setMedicamentos(medicamento);
-        this.toggleAddMedicamentoBox(false);
+  public adicionarMedicamento(medicamento: Medicamento): void {
+    if (!this.valueIsNotNull(medicamento.nome) && !this.valueIsNotNull(medicamento.quantidade)) {
+      if (this.medicamentosSelecionados.filter((medicamentoSelecionado) => {
+        return medicamentoSelecionado.idMedicamento === medicamento.idMedicamento;
+      }).length === 0) {
+        if (this.valueIsNotNull(medicamento.nome) && this.valueIsNotNull(medicamento.quantidade)) {
+          this.setMedicamentos(medicamento);
+          this.toggleAddMedicamentoBox(false);
+        } else {
+          this.showErrorViaToast('Não é possível adicionar o medicamento', 'Preencha os campos obrigatórios.');
+        }
       } else {
-        this.showErrorViaToast('Não é possível adicionar o medicamento', 'Preencha os campos obrigatórios.');
+        if (this.valueIsNotNull(medicamento.nome) && this.valueIsNotNull(medicamento.quantidade)) {
+          this.setUpdatedMedicamento(medicamento);
+          this.toggleAddMedicamentoBox(false);
+        } else {
+          this.showErrorViaToast('Não é possível atualizar o medicamento', 'Preencha os campos obrigatórios.');
+        }
       }
     } else {
-      if (this.valueIsNotNull(medicamento.nome) && this.valueIsNotNull(medicamento.quantidade)) {
-        this.setUpdatedMedicamento(medicamento);
-        this.toggleAddMedicamentoBox(false);
-      } else {
-        this.showErrorViaToast('Não é possível atualizar o medicamento', 'Preencha os campos obrigatórios.');
-      }
+      this.showErrorViaToast('Não é possível adicionar o medicamento', 'Preencha os campos obrigatórios.');
     }
   }
 
@@ -256,17 +317,31 @@ export class GoiasTestComponent implements OnInit {
   public async sendPrescription(): Promise<void> {
     // await this.getAccessToken();
     
-    if (this.accessToken !== '' && this.accessToken.length >= 1000) {
+    if (this.accessToken !== '' && this.accessToken.length >= 10) {
       this.invalidToken = false;
       
-      this.prescricao = new Prescricao(this.localAtendimento, this.paciente, this.medicamentosSelecionados);
+      if (!this.valueIsNotNull(this.pacienteSelecionado.idPaciente)) {
+        this.addPacienteSelection?.nativeElement.classList.add('warning-alert');
+        this.showWarnViaToast('Não é possível continuar', 'É necessário selecionar um paciente.');
+        return;
+      }
+      if (!this.valueIsNotNull(this.localAtendimentoSelecionado.idLocal)) {
+        this.addLocalAtendimentoSelection?.nativeElement.classList.add('warning-alert');
+        this.showWarnViaToast('Não é possível continuar', 'É necessário selecionar um local de atendimento.');
+        return;
+      }
+      if (this.medicamentosSelecionados.length === 0) {
+        this.addMedicamentoButtom?.nativeElement.classList.add('warning-alert');
+        this.showWarnViaToast('Não é possível continuar', 'É necessário selecionar pelo menos um medicamento.');
+        return;
+      }
 
+      this.prescricao = new Prescricao(this.localAtendimentoSelecionado, this.pacienteSelecionado, this.medicamentosSelecionados);
       this.requestMessage = new RequestMessage(this.accessToken, this.prescricao);
 
       console.log(this.requestMessage);
 
       this.integrationMessagesService.parentWindow.postMessage(this.requestMessage);
-
       this.integrationMessagesService.message$.subscribe((message: any) => {
         console.log(message);
       });
@@ -274,6 +349,9 @@ export class GoiasTestComponent implements OnInit {
       this.invalidToken = true;
       this.showWarnViaToast('Token inválido', 'É necessário informar um token de acesso válido.');
       this.accessTokenModalDisplay = true;
+      setTimeout(() => {
+        this.accessTokenField?.nativeElement.focus();
+      }, 1);
       return;
     }
   }
@@ -286,7 +364,7 @@ export class GoiasTestComponent implements OnInit {
    * @returns void 
    */
   private buscarPaciente(): void {
-    this.paciente = new Paciente();
+    this.pacienteSelecionado = new Paciente();
   }
   
   /**
@@ -323,6 +401,39 @@ export class GoiasTestComponent implements OnInit {
   }
 
   // ========== [ Local de atendimento ] ==========
+
+  /**
+   * Buscar local de atendimento.
+   * 
+   * @returns void 
+   */
+  private buscarLocalAtendimento(): void {
+    this.localAtendimento = new LocalAtendimento();
+  }
+
+  /**
+   * Filtrar locais de atendimento.
+   * 
+   * @param event 
+   * @returns void 
+   */
+  public filtrarLocaisAtendimento(event: any): void {
+    // let query = event.query;
+    
+    // this.locaisAtendimentoFiltrados = this.locaisAtendimento.filter((localAtendimento: LocalAtendimento) => {
+    //   return localAtendimento.nome.toLowerCase().includes(query.toLowerCase());
+    // });
+  }
+
+  /**
+   * Selecionar local de atendimento.
+   * 
+   * @param event 
+   * @returns void 
+   */
+  public selecionarLocalAtendimento(event: any): void {
+    this.localAtendimentoSelecionado = event.value;
+  }
   
   /**
    * Salvar local de atendimento.
@@ -342,7 +453,7 @@ export class GoiasTestComponent implements OnInit {
    * @returns boolean 
    */
   private valueIsNotNull(value: any): boolean {
-    return value !== null && value !== undefined && value !== '';
+    return value !== null || value !== undefined || value !== '';
   }
 
   // ========== [ Toast ] ==========
