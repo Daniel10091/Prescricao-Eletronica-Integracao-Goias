@@ -22,7 +22,6 @@ import { ToastModule } from 'primeng/toast';
   ],
   imports: [
     CommonModule,
-		FormsModule,
     GoiasRoutingModule,
     // Components that are used in the template
     FormsModule,
