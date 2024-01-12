@@ -1,0 +1,6 @@
+{
+  "/api": {
+    "target": "https://auth-hom.cfm.org.br",
+    "secure": false
+  }
+}

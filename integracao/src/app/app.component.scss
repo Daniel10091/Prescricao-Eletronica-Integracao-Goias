@@ -1,0 +1,13 @@
+.logo {
+  width: 50px;
+  height: 50px;
+}
+
+.menu {
+  .menu-item a {
+    color: var(--text-white);
+    &.active {
+      color: var(--text-primary);
+    }
+  }
+}
