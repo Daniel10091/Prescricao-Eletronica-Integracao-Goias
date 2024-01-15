@@ -22,8 +22,11 @@ import { IntegrationMessagesService } from 'src/app/services/integration-message
 })
 export class InicioComponent implements OnInit {
 
+  // Integration URL
+  protected prescricaoIntegracaoUrl = 'http://localhost:4200/prescricao-integracao';
+
   // Utils
-  addMedicamento = true;
+  addMedicamento = false;
   msgs: Message[] = [];
   accessTokenModalDisplay: boolean = false;
 
@@ -40,11 +43,11 @@ export class InicioComponent implements OnInit {
 
   // Medicamento UI
   medicamentos: SelectItem[] = [];
-  selectedMedicamentoDrop: SelectItem = { value: '' };
+  selectedMedicamentoDrop: SelectItem[] = [];
 
   // Local de atendimento UI
   locaisAtendimento: SelectItem[] = [];
-  selectedLocaisAtendimentoDrop: SelectItem = { value: '' };
+  selectedLocalAtendimentoDrop: SelectItem = { value: '' };
 
   // Prescrição
   prescricao?: Prescricao;
@@ -235,7 +238,10 @@ export class InicioComponent implements OnInit {
    * @returns void 
    */
   public adicionarMedicamento(medicamento: Medicamento): void {
-    if (!this.valueIsNotNull(medicamento.nome) && !this.valueIsNotNull(medicamento.quantidade)) {
+    console.log('====================================');
+    console.log(medicamento);
+    console.log('====================================');
+    if (this.valueIsNotNull(medicamento.nome) && this.valueIsNotNull(medicamento.quantidade)) {
       if (this.medicamentosSelecionados.filter((medicamentoSelecionado) => {
         return medicamentoSelecionado.idMedicamento === medicamento.idMedicamento;
       }).length === 0) {

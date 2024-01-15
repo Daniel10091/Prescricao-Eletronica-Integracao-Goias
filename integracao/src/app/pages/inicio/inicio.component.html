@@ -12,7 +12,7 @@
           <div class="col">
             <div class="form-group flex flex-column p-fluid gap-2">
               <label for="paciente" class="text-lg font-bold">Paciente</label>
-              <p-dropdown [options]="pacientes" [(ngModel)]="selectedPacienteDrop" placeholder="Selecione um paciente" (onChange)="selecionarPaciente($event)"></p-dropdown>
+              <p-dropdown [options]="pacientes" [(ngModel)]="selectedPacienteDrop" placeholder="Selecione um paciente" (onChange)="selecionarPaciente($event)" [ngModelOptions]="{standalone: true}"></p-dropdown>
               <!-- <p-dropdown [options]="medicamentos" [(ngModel)]="selectedMedicamentoDrop" placeholder="Selecione um medicamento"></p-dropdown> -->
             </div>
           </div>
@@ -41,7 +41,7 @@
               <div class="form-group flex flex-column gap-2 p-fluid">
                 <label for="medicamentoNome">Nome do medicamento/fórmula/substância prescrito(a) (DCB) <span class="text-lg font-bold text-red-500">*</span></label>
                 <!-- <input type="hidden" pInputText class="form-control" id="medicamentoNome" placeholder="" [(ngModel)]="medicamento.nome" name="medicamentoNome"> -->
-			          <p-autoComplete [(ngModel)]="selectedPacienteDrop" [suggestions]="filteredMedicamentos" name="medicamentoNome" (completeMethod)="filterMedicamento($event)" field="label" [ngModelOptions]="{standalone: true}"></p-autoComplete>
+			          <p-autoComplete [(ngModel)]="selectedMedicamentoDrop" [suggestions]="filteredMedicamentos" name="medicamentoNome" (completeMethod)="filterMedicamento($event)" field="label" [ngModelOptions]="{standalone: true}"></p-autoComplete>
                 <!-- <p-dropdown [options]="medicamentos" [(ngModel)]="selectedMedicamentoDrop" id="medicamentoNome" placeholder="Selecione um medicamento"></p-dropdown> -->
               </div>
             </div>
@@ -101,7 +101,7 @@
           <div class="col">
             <div class="form-group flex flex-column p-fluid gap-2">
               <label for="localAtendimento" class="text-lg font-bold">Local de Atendimento</label>
-              <p-dropdown [options]="locaisAtendimento" [(ngModel)]="selectedLocaisAtendimentoDrop" placeholder="Selecione um local de atendimento" (onChange)="selecionarLocalAtendimento($event)"></p-dropdown>
+              <p-dropdown [options]="locaisAtendimento" [(ngModel)]="selectedLocalAtendimentoDrop" placeholder="Selecione um local de atendimento" (onChange)="selecionarLocalAtendimento($event)" [ngModelOptions]="{standalone: true}"></p-dropdown>
             </div>
           </div>
           <div class="col col-fixed flex align-items-end">
@@ -137,5 +137,9 @@
     <button pButton icon="pi pi-check" (click)="toggleAccessTokenModal()" label="Ok" class="p-button-outlined"></button>
   </ng-template>
 </p-dialog>
+
+<div class="iframe-container">
+  <iframe #iframe [src]="prescricaoIntegracaoUrl" frameborder="0" allowfullscreen></iframe>
+</div>
 
 <p-toast key="tst"></p-toast>
