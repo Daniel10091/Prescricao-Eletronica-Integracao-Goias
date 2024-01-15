@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GoiasTestComponent } from './goias-test.component';
+import { InicioComponent } from './inicio.component';
 
-describe('GoiasTestComponent', () => {
-  let component: GoiasTestComponent;
-  let fixture: ComponentFixture<GoiasTestComponent>;
+describe('InicioComponent', () => {
+  let component: InicioComponent;
+  let fixture: ComponentFixture<InicioComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GoiasTestComponent]
+      declarations: [InicioComponent]
     });
-    fixture = TestBed.createComponent(GoiasTestComponent);
+    fixture = TestBed.createComponent(InicioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

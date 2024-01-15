@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GoiasTestComponent } from './goias-test.component';
+import { InicioComponent } from './inicio.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: GoiasTestComponent
+    component: InicioComponent
   }
 ];
 
@@ -13,7 +13,7 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class GoiasRoutingModule {
+export class InicioRoutingModule {
 
   constructor() {
   }

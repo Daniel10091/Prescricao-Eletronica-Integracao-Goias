@@ -1,8 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { GoiasRoutingModule } from './goias-routing.module';
+import { CommonModule } from '@angular/common';
 
-import { GoiasTestComponent } from './goias-test.component';
+import { InicioRoutingModule } from './inicio-routing.module';
+import { InicioComponent } from './inicio.component';
 
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,12 +18,12 @@ import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
-    GoiasTestComponent
+    InicioComponent
   ],
   imports: [
     CommonModule,
-    GoiasRoutingModule,
-    // Components that are used in the template
+    InicioRoutingModule,
+
     FormsModule,
     InputTextModule,
     DropdownModule,
@@ -37,4 +37,4 @@ import { ToastModule } from 'primeng/toast';
 		ToastModule
   ]
 })
-export class GoiasTestModule { }
+export class InicioModule { }

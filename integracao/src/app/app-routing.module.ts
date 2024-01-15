@@ -4,16 +4,16 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'goias',
+    redirectTo: 'inicio',
     pathMatch: 'full'
+  },
+  {
+    path: 'inicio',
+    loadChildren: () => import('./pages/inicio/inicio.module').then(m => m.InicioModule),
   },
   {
     path: 'prescricao',
     loadChildren: () => import('./pages/prescricao/prescricao.module').then(m => m.PrescricaoModule),
-  },
-  {
-    path: 'goias',
-    loadChildren: () => import('./pages/goias-test/goias-test.module').then(m => m.GoiasTestModule),
   },
   {
     path: 'paciente',

@@ -15,12 +15,12 @@ import { AuthAccessRequestService } from 'src/app/services/auth-access-request.s
 import { IntegrationMessagesService } from 'src/app/services/integration-messages.service';
 
 @Component({
-  selector: 'app-goias-test',
-  templateUrl: './goias-test.component.html',
-  styleUrls: ['./goias-test.component.scss'],
+  selector: 'app-inicio',
+  templateUrl: './inicio.component.html',
+  styleUrls: ['./inicio.component.scss'],
   providers: [ IntegrationMessagesService, MessageService ]
 })
-export class GoiasTestComponent implements OnInit {
+export class InicioComponent implements OnInit {
 
   // Utils
   addMedicamento = true;
