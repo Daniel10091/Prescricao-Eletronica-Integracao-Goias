@@ -29,6 +29,7 @@ export class InicioComponent implements OnInit {
   addMedicamento = false;
   msgs: Message[] = [];
   accessTokenModalDisplay: boolean = false;
+  showIframe: boolean = false;
 
   // UI
   @ViewChild('addPacienteSelection') addPacienteSelection?: ElementRef;
@@ -238,9 +239,6 @@ export class InicioComponent implements OnInit {
    * @returns void 
    */
   public adicionarMedicamento(medicamento: Medicamento): void {
-    console.log('====================================');
-    console.log(medicamento);
-    console.log('====================================');
     if (this.valueIsNotNull(medicamento.nome) && this.valueIsNotNull(medicamento.quantidade)) {
       if (this.medicamentosSelecionados.filter((medicamentoSelecionado) => {
         return medicamentoSelecionado.idMedicamento === medicamento.idMedicamento;
@@ -272,7 +270,6 @@ export class InicioComponent implements OnInit {
    */
   public setMedicamentos(medicamento: Medicamento): void {
     this.medicamentosSelecionados.push(medicamento);
-    console.log(this.medicamentosSelecionados);
   }
 
   /**
@@ -344,13 +341,20 @@ export class InicioComponent implements OnInit {
 
       this.prescricao = new Prescricao(this.localAtendimentoSelecionado, this.pacienteSelecionado, this.medicamentosSelecionados);
       this.requestMessage = new RequestMessage(this.accessToken, this.prescricao);
+      
+      this.showSuccessViaToast('Prescrição enviada', 'A prescrição foi enviada com sucesso.');
 
       console.log(this.requestMessage);
 
-      this.integrationMessagesService.parentWindow.postMessage(this.requestMessage);
+      this.showIframe = true;
+
+      this.integrationMessagesService.parentWindow.postMessage(this.encodeRequestMessage(this.requestMessage), this.prescricaoIntegracaoUrl);
       this.integrationMessagesService.message$.subscribe((message: any) => {
         console.log(message);
       });
+
+      console.log(this.encodeRequestMessage(this.requestMessage));
+      
     } else {
       this.invalidToken = true;
       this.showWarnViaToast('Token inválido', 'É necessário informar um token de acesso válido.');
@@ -360,6 +364,26 @@ export class InicioComponent implements OnInit {
       }, 1);
       return;
     }
+  }
+
+  /**
+   * Codifica a mensagem de requisição.
+   * 
+   * @param requestMessage 
+   * @returns string 
+   */
+  private encodeRequestMessage(requestMessage: RequestMessage): string {
+    return btoa(JSON.stringify(requestMessage));
+  }
+
+  /**
+   * Decodifica a mensagem de resposta.
+   * 
+   * @param responseMessage 
+   * @returns string 
+   */
+  private decodeResponseMessage(responseMessage: string): string {
+    return atob(responseMessage);
   }
 
   // ========== [ Paciente ] ==========

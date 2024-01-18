@@ -47,7 +47,7 @@
             </div>
             <div class="col col-3">
               <div class="form-group flex flex-column gap-2">
-                <label for="medicamentoConcentracao">Dosagem/Concentração</label>
+                <label for="medicamentoConcentracao">Dosagem/Concentração <span class="text-lg font-bold text-red-500"></span></label>
                 <input type="text" pInputText class="form-control" id="medicamentoConcentracao" placeholder="" [(ngModel)]="medicamento.concentracao" name="medicamentoConcentracao">
               </div>
             </div>
@@ -138,7 +138,7 @@
   </ng-template>
 </p-dialog>
 
-<div class="iframe-container">
+<div *ngIf="showIframe" class="iframe-container">
   <iframe #iframe [src]="prescricaoIntegracaoUrl" frameborder="0" allowfullscreen></iframe>
 </div>
 
